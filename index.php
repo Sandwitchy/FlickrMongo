@@ -1,3 +1,6 @@
+<?php
+require_once('bdd.php');
+?>
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
   <head>
@@ -26,8 +29,13 @@
 if ($_REQUEST["searchtag"]) {
   $tag = $_REQUEST["searchtag"];
   $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=28984d098e9946c2c42b87eac57a678b&tags=". $tag ."&min_upload_date=&max_upload_date=&safe_search=&format=json&nojsoncallback=1";
-
+ /* if(search($tag)){
+    print('fdsfjksdfs');
+  }else{
+    print('hello');
+  }*/
   $result = json_decode(file_get_contents($url), true);
+  insert($result["photos"]["photo"],$tag);
   foreach ($result["photos"]["photo"] as $img) {
     $imgurl = "https://farm" . $img["farm"] . ".staticflickr.com/" . $img["server"] . "/" . $img["id"] . "_" . $img["secret"] . ".jpg";
     ?>
