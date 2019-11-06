@@ -26,7 +26,7 @@ require_once('bdd.php');
     </nav>
     <div class="gallery" id="gallery">
 <?php
-if ($_REQUEST["searchtag"]) {
+if (isset($_REQUEST["searchtag"])) {
   $tag = $_REQUEST["searchtag"];
   $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=28984d098e9946c2c42b87eac57a678b&tags=". $tag ."&min_upload_date=&max_upload_date=&safe_search=&format=json&nojsoncallback=1";
  /* if(search($tag)){
