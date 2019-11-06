@@ -1,15 +1,8 @@
 <?php
-
-/***************************************
-------------------------------------------------
-ADDRESSE DE CONNECTION AU SERVEUR MONGO
-------------------------------------------------
-*******************************************/
-$ADDRESS_MONGO = "mongodb://localhost:27017";
-
+const ADDRESS_MONGO = "mongodb://localhost:27017";
 
 function insert(array $data, string $tag){
-    $manager = new MongoDB\Driver\Manager($ADDRESS_MONGO);
+    $manager = new MongoDB\Driver\Manager(ADDRESS_MONGO);
     $bulk = new MongoDB\Driver\BulkWrite;
     foreach($data as $item){
         $itemurl = "https://farm" . $item["farm"] . ".staticflickr.com/" . $item["server"] . "/" . $item["id"] . "_" . $item["secret"] . ".jpg";
@@ -20,7 +13,7 @@ function insert(array $data, string $tag){
 }
 
 function search(string $tag){
-    $manager = new MongoDB\Driver\Manager($ADDRESS_MONGO);
+    $manager = new MongoDB\Driver\Manager(ADDRESS_MONGO);
     $query = new MongoDB\Driver\Query( [
         'tag' => $tag
     ] );
@@ -41,7 +34,7 @@ $cursor = $manager->executeCommand('db', $command);
 
 /* The aggregate command can optionally return its results in a cursor instead
  * of a single result document. In this case, we can iterate on the cursor
- * directly to access those results. 
+ * directly to access those results.
 foreach ($cursor as $document) {
     var_dump($document);
 }
