@@ -1,0 +1,14 @@
+{
+    "name": "sandwitchy/flickr-mongo",
+    "description": "a very good project",
+    "type": "project",
+    "require": {
+        "mongodb/mongodb": "^1.5"
+    },
+    "authors": [
+        {
+            "name": "Sandwitchy",
+            "email": "andrea.fratani@gmail.com"
+        }
+    ]
+}
