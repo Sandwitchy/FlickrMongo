@@ -1,12 +1,4 @@
 <?php
-function insert(array $data, string $tag){
-    $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
-    $bulk = new MongoDB\Driver\BulkWrite;
-    foreach($data as $item){
-        $itemurl = "https://farm" . $item["farm"] . ".staticflickr.com/" . $item["server"] . "/" . $item["id"] . "_" . $item["secret"] . ".jpg";
-        $bulk->insert(['itemurl' => $itemurl, 'tag' => $tag]);
-    }
-    $manager->executeBulkWrite('flickr.images', $bulk);
 
 }
 
