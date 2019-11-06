@@ -1,9 +1,26 @@
 <?php
 
+/***************************************
+------------------------------------------------
+ADDRESSE DE CONNECTION AU SERVEUR MONGO
+------------------------------------------------
+*******************************************/
+$ADDRESS_MONGO = "mongodb://localhost:27017";
+
+
+function insert(array $data, string $tag){
+    $manager = new MongoDB\Driver\Manager($ADDRESS_MONGO);
+    $bulk = new MongoDB\Driver\BulkWrite;
+    foreach($data as $item){
+        $itemurl = "https://farm" . $item["farm"] . ".staticflickr.com/" . $item["server"] . "/" . $item["id"] . "_" . $item["secret"] . ".jpg";
+        $bulk->insert(['itemurl' => $itemurl, 'tag' => $tag]);
+    }
+    $manager->executeBulkWrite('flickr.images', $bulk);
+
 }
 
 function search(string $tag){
-    $manager = new MongoDB\Driver\Manager('mongodb://localhost:27017');
+    $manager = new MongoDB\Driver\Manager($ADDRESS_MONGO);
     $query = new MongoDB\Driver\Query( [
         'tag' => $tag
     ] );
