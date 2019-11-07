@@ -47,8 +47,6 @@ require_once('bdd.php');
     return $url;
   }
 
-const API_KEY = "828e660b4e4c9f0a931a9adbe60ba348";
-
 $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search";
 
 if (! is_null(API_KEY)) {
@@ -58,16 +56,11 @@ if (! is_null(API_KEY)) {
 
 if (isset($_REQUEST["searchtag"])) {
   $tag = $_REQUEST["searchtag"];
-  if(search($tag)){
-    foreach(search($tag) as $item){
-      ?>
-      <img class="img-fluid" src="<?php echo $item['itemurl']; ?>" alt="Image">
-  <?php
-    }
   $url = urlBuilder($url,"&tags=",$tag);
   if (isset($_REQUEST["date_min"])) {
     $url = urlBuilder($url,"&min_upload_date=",$_REQUEST["date_min"]);
   if (isset($_REQUEST["date_max"])) {
+    $url = urlBuilder($url,"&max_upload_date=",$_REQUEST["date_max"]);
   }
     $url = urlBuilder($url,"&max_upload_date=",$_REQUEST["date_max"]);
   if(isset($_REQUEST["safe"]) and $_REQUEST["safe"] == "true"){
@@ -75,7 +68,15 @@ if (isset($_REQUEST["searchtag"])) {
   }
   }
   $url .= "&format=json&nojsoncallback=1";
-  }else{
+  
+  if(search($tag)){
+    foreach(search($tag) as $item){
+      ?>
+      <img class="img-fluid" src="<?php echo $item['itemurl']; ?>" alt="Image">
+  <?php
+    }
+  }
+  else{
     $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=".API_KEY."&tags=". $tag ."&min_upload_date=&max_upload_date=&safe_search=&format=json&nojsoncallback=1";
     $result = json_decode(file_get_contents($url), true);
     insert($result["photos"]["photo"],$tag);
