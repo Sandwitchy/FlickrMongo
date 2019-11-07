@@ -44,10 +44,10 @@ require_once('bdd.php');
     $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search";
 
     $url .= "&tags=".$tag;
-    if (isset($date_min)) {
+    if (isset($date_min) && ($date_min !== "")) {
       $url .= "&min_upload_date=".$date_min;
     }
-    if (isset($date_max)) {
+    if (isset($date_max)&& ($date_max !== "")) {
       $url .= "&max_upload_date=".$date_max;
     }
     $url .= "&format=json&nojsoncallback=1";
@@ -61,30 +61,34 @@ require_once('bdd.php');
 
 
 
+try{
+  if (isset($_REQUEST["searchtag"])) {
+    $tag = $_REQUEST["searchtag"];
+    if(search($tag)){
+      foreach(search($tag,$_REQUEST['date_min'],$_REQUEST['date_max']) as $item){
+        ?>
+          <img class="img-fluid" src="<?php echo $item['itemurl']; ?>" alt="Image">
+        <?php
+      }
+    }else{
 
-if (isset($_REQUEST["searchtag"])) {
-  $tag = $_REQUEST["searchtag"];
-  
-  if(search($tag)){
-    foreach(search($tag) as $item){
-      ?>
-      <img class="img-fluid" src="<?php echo $item['itemurl']; ?>" alt="Image">
-  <?php
-    }
-  
-  }else{
-    $url = urlBuilder($tag,$_REQUEST['date_min'],$_REQUEST['date_max']);
-    $result = json_decode(file_get_contents($url), true);
-    insert($result["photos"]["photo"],$tag);
-    foreach ($result["photos"]["photo"] as $img) {
-      $imgurl = "https://farm" . $img["farm"] . ".staticflickr.com/" . $img["server"] . "/" . $img["id"] . "_" . $img["secret"] . ".jpg";
-      ?>
-          <img class="img-fluid" src="<?php echo $imgurl; ?>" alt="Image">
-      <?php
-    }
+      $url = urlBuilder($tag,$_REQUEST['date_min'],$_REQUEST['date_max']);
+      $result = json_decode(file_get_contents($url), true);
 
+      insert($result["photos"]["photo"],$tag,$_REQUEST['date_min'],$_REQUEST['date_max']);
+      foreach ($result["photos"]["photo"] as $img) {
+        $imgurl = "https://farm" . $img["farm"] . ".staticflickr.com/" . $img["server"] . "/" . $img["id"] . "_" . $img["secret"] . ".jpg";
+        ?>
+            <img class="img-fluid" src="<?php echo $imgurl; ?>" alt="Image">
+        <?php
+      }
+    }
   }
+}catch(Exception $e){
+  print($e);
+  die();
 }
+
 
 ?>
 </div>
