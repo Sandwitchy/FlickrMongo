@@ -30,7 +30,10 @@ require_once('bdd.php');
     <nav class="navbar navbar-light bg-light">
       <form class="form-inline" action="" method="post">
         <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Recherche" name="searchtag">
-        <input class="datepicker" name="date" type="date">
+        <input type="date" name="date_min" placeholder="Date Min Upload">
+        <input type="date" name="date_max" placeholder="Date Max Upload">
+        <label>Safe Search</label>
+        <input type="checkbox" name="safe" value="true">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
       </form>
     </nav>
@@ -38,6 +41,21 @@ require_once('bdd.php');
       <div class="row">
         <div class="gal">
 <?php
+
+  function urlBuilder($url,$urlPart,$value){
+    $url .= $urlPart.$value;
+    return $url;
+  }
+
+const API_KEY = "828e660b4e4c9f0a931a9adbe60ba348";
+
+$url = "https://www.flickr.com/services/rest/?method=flickr.photos.search";
+
+if (! is_null(API_KEY)) {
+  $url = urlBuilder($url,"&api_key=",API_KEY);
+}
+
+
 if (isset($_REQUEST["searchtag"])) {
   $tag = $_REQUEST["searchtag"];
   if(search($tag)){
@@ -46,6 +64,17 @@ if (isset($_REQUEST["searchtag"])) {
       <img class="img-fluid" src="<?php echo $item['itemurl']; ?>" alt="Image">
   <?php
     }
+  $url = urlBuilder($url,"&tags=",$tag);
+  if (isset($_REQUEST["date_min"])) {
+    $url = urlBuilder($url,"&min_upload_date=",$_REQUEST["date_min"]);
+  if (isset($_REQUEST["date_max"])) {
+  }
+    $url = urlBuilder($url,"&max_upload_date=",$_REQUEST["date_max"]);
+  if(isset($_REQUEST["safe"]) and $_REQUEST["safe"] == "true"){
+    $url = urlBuilder($url,"&safe_search=","");
+  }
+  }
+  $url .= "&format=json&nojsoncallback=1";
   }else{
     $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=".API_KEY."&tags=". $tag ."&min_upload_date=&max_upload_date=&safe_search=&format=json&nojsoncallback=1";
     $result = json_decode(file_get_contents($url), true);
