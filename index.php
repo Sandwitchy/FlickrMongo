@@ -30,7 +30,9 @@ require_once('bdd.php');
     <nav class="navbar navbar-light bg-light">
       <form class="form-inline" action="" method="post">
         <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Recherche" name="searchtag">
+        <label>Date Min</label>
         <input type="date" name="date_min" placeholder="Date Min Upload">
+        <label>Date Max</label>
         <input type="date" name="date_max" placeholder="Date Max Upload">
         <label>Safe Search</label>
         <input type="checkbox" name="safe" value="true">
@@ -59,6 +61,7 @@ if (isset($_REQUEST["searchtag"])) {
   $url = urlBuilder($url,"&tags=",$tag);
   if (isset($_REQUEST["date_min"])) {
     $url = urlBuilder($url,"&min_upload_date=",$_REQUEST["date_min"]);
+  }
   if (isset($_REQUEST["date_max"])) {
     $url = urlBuilder($url,"&max_upload_date=",$_REQUEST["date_max"]);
   }
@@ -66,7 +69,7 @@ if (isset($_REQUEST["searchtag"])) {
   if(isset($_REQUEST["safe"]) and $_REQUEST["safe"] == "true"){
     $url = urlBuilder($url,"&safe_search=","");
   }
-  }
+
   $url .= "&format=json&nojsoncallback=1";
   
   if(search($tag)){
