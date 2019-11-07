@@ -86,7 +86,7 @@ if (isset($_REQUEST["searchtag"])) {
           <img class="img-fluid" src="<?php echo $imgurl; ?>" alt="Image">
       <?php
     }
-  
+
   }
 }
 
