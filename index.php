@@ -40,20 +40,25 @@ require_once('bdd.php');
 <?php
 if (isset($_REQUEST["searchtag"])) {
   $tag = $_REQUEST["searchtag"];
-  $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=828e660b4e4c9f0a931a9adbe60ba348&tags=". $tag ."&min_upload_date=&max_upload_date=&safe_search=&format=json&nojsoncallback=1";
- /* if(search($tag)){
-    print('fdsfjksdfs');
+  if(search($tag)){
+    foreach(search($tag) as $item){
+      ?>
+      <img class="img-fluid" src="<?php echo $item['itemurl']; ?>" alt="Image">
+  <?php
+    }
   }else{
-    print('hello');
-  }*/
-  $result = json_decode(file_get_contents($url), true);
-  insert($result["photos"]["photo"],$tag);
-  foreach ($result["photos"]["photo"] as $img) {
-    $imgurl = "https://farm" . $img["farm"] . ".staticflickr.com/" . $img["server"] . "/" . $img["id"] . "_" . $img["secret"] . ".jpg";
-    ?>
-        <img class="img-fluid" src="<?php echo $imgurl; ?>" alt="Image">
-    <?php
+    $url = "https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=".API_KEY."&tags=". $tag ."&min_upload_date=&max_upload_date=&safe_search=&format=json&nojsoncallback=1";
+    $result = json_decode(file_get_contents($url), true);
+    insert($result["photos"]["photo"],$tag);
+    foreach ($result["photos"]["photo"] as $img) {
+      $imgurl = "https://farm" . $img["farm"] . ".staticflickr.com/" . $img["server"] . "/" . $img["id"] . "_" . $img["secret"] . ".jpg";
+      ?>
+          <img class="img-fluid" src="<?php echo $imgurl; ?>" alt="Image">
+      <?php
+    }
+  
   }
+}
 ?>
 </div>
 </div>
