@@ -7,7 +7,8 @@ function insert(array $data, string $tag,  $date_min, $date_max){
     $bulk = new MongoDB\Driver\BulkWrite;
     foreach($data as $item){
         $itemurl = "https://farm" . $item["farm"] . ".staticflickr.com/" . $item["server"] . "/" . $item["id"] . "_" . $item["secret"] . ".jpg";
-        $bulk->insert(['itemurl' => $itemurl, 'tag' => $tag,'date_min' => $date_min,'date_max' => $date_max ]);
+        $iteminfo = "https://www.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=".API_KEY."&photo_id=".$item["id"]."&secret=".$item["secret"]."&format=json&nojsoncallback=1";
+        $bulk->insert(['itemurl' => $itemurl, 'iteminfo'=> $iteminfo, 'tag' => $tag,'date_min' => $date_min,'date_max' => $date_max ]);
     }
     $manager->executeBulkWrite('flickr.images', $bulk);
 }
