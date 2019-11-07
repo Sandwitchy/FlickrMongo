@@ -13,6 +13,7 @@ function insert(array $data, string $tag,  $date_min, $date_max){
     $manager->executeBulkWrite('flickr.images', $bulk);
 }
 
+
 function search(string $tag,$date_min = null,$date_max = null){
     try{
         $manager = new MongoDB\Driver\Manager(ADDRESS_MONGO);
